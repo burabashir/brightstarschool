@@ -56,7 +56,7 @@ const Getproduct = () => {
     return (
         <div className='row'>
             <Navbar />
-            <h3 className="text-primary">Available Products</h3>
+            <h3 className="text-primary">Find Your Spark</h3>
             <Mycarousel />
             {loading && <Loader />}
             <h4 className="text-danger">{error}</h4>
@@ -64,7 +64,7 @@ const Getproduct = () => {
             {/* map the products fecthed from the API to the user interface */}
 
             {products.map((product) => (
-                            <div className="col-3 justify-content-center mb-3">
+                            <div className="col-md-3 justify-content-center mb-3">
                 <div className='card shadow bg-dark'>
                     <img 
                     src={img_url + product.product_photo} 
@@ -74,7 +74,7 @@ const Getproduct = () => {
                     <div className="card-body">
                         <h3 className="text-danger">{product.product_name}</h3>
 
-                        <p className='text-light'>{product.product_description.slice(0,70)}...</p>
+                        <p className='text-light'>{product.product_description.slice(0,50)}...</p>
 
                         <h4 className="text-warning">KES {product.product_cost}</h4>
 
