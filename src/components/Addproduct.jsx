@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Loader from './Loader';
 import axios from 'axios';
 import Navbar from './Mynavbar';
 import Footer from './Footer';
+import { useNavigate } from 'react-router-dom';
 import "../css/signin.css";
 
 const Addproduct = () => {
@@ -16,17 +17,23 @@ const Addproduct = () => {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
+    const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError("");
+        setSuccess("");
 
-        try{
+        try {
+            const role = localStorage.getItem("role"); // ✅ GET ROLE
+
             const formData = new FormData();
-
             formData.append("product_name", product_name);
             formData.append("product_description", product_description);
             formData.append("product_cost", product_cost);
             formData.append("product_photo", product_photo);
+            formData.append("role", role); // ✅ SEND ROLE
 
             const response = await axios.post(
                 "https://dumabashir.alwaysdata.net/api/add_product",
@@ -34,7 +41,7 @@ const Addproduct = () => {
             );
 
             setLoading(false);
-            setSuccess(response.data.Message);
+            setSuccess("🎉 Talent submitted successfully!");
 
             setProductName("");
             setProductDescription("");
@@ -43,39 +50,37 @@ const Addproduct = () => {
 
             e.target.reset();
 
-            setTimeout(() => setSuccess(""), 5000);
+            setTimeout(() => {
+                setSuccess("");
+                navigate("/");
+            }, 3000);
 
-        }
-        catch(error) {
+        } catch (error) {
             setLoading(false);
-            setError(error.message);
+            setError("❌ Failed to submit talent. Try again.");
         }
-    }
+    };
 
     return (
         <div className="container-fluid bg-dark min-vh-100">
             <Navbar />
 
             <div className="row mt-4 justify-content-center">
-
-                {/* ✅ Updated class */}
                 <div className="col-md-6 custom-card shadow p-4 text-light">
 
-                    <h4 className="custom-title">Add Product</h4>
+                    <h4 className="custom-title">🎭 Add Talent Entry</h4>
 
-                    {loading && <Loader/>}
-
-                    <h3 className="text-success">{success}</h3>
-                    <h4 className="text-danger">{error}</h4>
+                    {loading && <Loader />}
+                    {success && <h3 className="text-success">{success}</h3>}
+                    {error && <h4 className="text-danger">{error}</h4>}
 
                     <form onSubmit={handleSubmit}>
 
-                        {/* Product Name */}
                         <label className="custom-field">
-                            <span className="custom-input-icon">📦</span>
+                            <span className="custom-input-icon">🏆</span>
                             <input
                                 type="text"
-                                placeholder="Product Name"
+                                placeholder="Talent (e.g. Karate Performance)"
                                 className="custom-input"
                                 value={product_name}
                                 onChange={(e) => setProductName(e.target.value)}
@@ -83,11 +88,10 @@ const Addproduct = () => {
                             />
                         </label>
 
-                        {/* Product Description */}
                         <label className="custom-field">
                             <span className="custom-input-icon">📝</span>
                             <textarea
-                                placeholder="Product Description"
+                                placeholder="Describe the talent performance..."
                                 className="custom-input"
                                 value={product_description}
                                 onChange={(e) => setProductDescription(e.target.value)}
@@ -95,12 +99,11 @@ const Addproduct = () => {
                             ></textarea>
                         </label>
 
-                        {/* Product Price */}
                         <label className="custom-field">
                             <span className="custom-input-icon">💰</span>
                             <input
                                 type="number"
-                                placeholder="Product Price"
+                                placeholder="Entry Fee (KES)"
                                 className="custom-input"
                                 value={product_cost}
                                 onChange={(e) => setProductCost(e.target.value)}
@@ -108,7 +111,6 @@ const Addproduct = () => {
                             />
                         </label>
 
-                        {/* Product Photo */}
                         <label className="custom-field">
                             <span className="custom-input-icon">📷</span>
                             <input
@@ -120,21 +122,19 @@ const Addproduct = () => {
                             />
                         </label>
 
-                        {/* ✅ Updated button */}
                         <input
                             type="submit"
-                            value="Add Product"
+                            value="Submit Talent"
                             className="custom-btn mt-3"
                         />
 
                     </form>
                 </div>
-
             </div>
 
             <Footer />
         </div>
-    )
-}
+    );
+};
 
 export default Addproduct;

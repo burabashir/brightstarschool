@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./Mynavbar";
 import Footer from "./Footer";
 import "../css/signin.css";
@@ -12,14 +12,18 @@ const Signup = () => {
     const [Email, setEmail] = useState("");
     const [Password, setPassword] = useState("");
     const [tel, setTel] = useState("");
-
+    const [role, setRole] = useState("student");
     const [loading, setLoading] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
+    const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading("Creating your account...");
+        setError("");
+        setSuccess("");
 
         try {
             const formData = new FormData();
@@ -27,20 +31,42 @@ const Signup = () => {
             formData.append("email", Email);
             formData.append("password", Password);
             formData.append("phone", tel);
+            formData.append("role", role);
 
-            const response = await axios.post("https://dumabashir.alwaysdata.net/api/signup", formData);
+            const response = await axios.post(
+                "https://dumabashir.alwaysdata.net/api/signup",
+                formData
+            );
 
             setLoading("");
-            setSuccess(response.data.Success);
 
-            setUsername("");
-            setEmail("");
-            setPassword("");
-            setTel("");
+            if (response.data.Success) {
+                localStorage.setItem("user", JSON.stringify({
+                    username: Username,
+                    email: Email,
+                    role: role
+                }));
+                localStorage.setItem("role", role);
 
-        } catch (error) {
+                setSuccess("✅ Account created successfully! Redirecting...");
+
+                setTimeout(() => {
+                    navigate("/");
+                }, 3000);
+
+                setUsername("");
+                setEmail("");
+                setPassword("");
+                setTel("");
+                setRole("student");
+
+            } else {
+                setError("Signup failed. Try again.");
+            }
+
+        } catch (err) {
             setLoading("");
-            setError(error.message);
+            setError("Something went wrong. Please try again.");
         }
     };
 
@@ -48,10 +74,10 @@ const Signup = () => {
         <div className="container-fluid bg-dark min-vh-100">
             <Navbar />
 
-            <div className="row mt-4 justify-content-center">
-                <div className="col-md-6 custom-card shadow">
+            <div className="row mt-5 justify-content-center">
+                <div className="col-md-5 custom-card shadow">
 
-                    <h4 className="custom-title">Sign Up!</h4>
+                    <h4 className="custom-title">📝 Sign Up</h4>
 
                     <form onSubmit={handleSubmit}>
 
@@ -68,7 +94,7 @@ const Signup = () => {
                         </label>
 
                         <label className="custom-field">
-                            <span className="custom-input-icon">@</span>
+                            <span className="custom-input-icon">📧</span>
                             <input
                                 className="custom-input"
                                 type="email"
@@ -103,20 +129,33 @@ const Signup = () => {
                             />
                         </label>
 
-                        <button type="submit" className="btn btn-warning custom-btn">
+                        <label className="custom-field">
+                            <span className="custom-input-icon">🎓</span>
+                            <select
+                                className="custom-input"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                required
+                            >
+                                <option value="student">Student</option>
+                                <option value="school">School</option>
+                            </select>
+                        </label>
+
+                        <button type="submit" className="btn btn-warning custom-btn w-100">
                             Sign Up
                         </button>
 
-                        <p className="custom-link">
+                        <p className="custom-link text-center mt-3">
                             Already have an account?{" "}
                             <Link to="/signin" className="text-danger">Sign In</Link>
                         </p>
 
                     </form>
 
-                    {loading && <p className="text-warning">{loading}</p>}
-                    {error && <p className="text-danger">{error}</p>}
-                    {success && <p className="text-success">{success}</p>}
+                    {loading && <p className="text-warning text-center">{loading}</p>}
+                    {error && <p className="text-danger text-center">{error}</p>}
+                    {success && <p className="text-success text-center">{success}</p>}
 
                 </div>
             </div>

@@ -1,68 +1,68 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Navbar from './Mynavbar';
+import Footer from './Footer';
 import Loader from './Loader';
 import { useNavigate } from 'react-router-dom';
-import Footer from './Footer';
-import Mycarousel from './Mycarousel';
-import Navbar from './Mynavbar';
 
-const Getproduct = () => {
+const Instruments = () => {
 
-    const [products, setProducts] = useState([]);
+    const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const navigate = useNavigate();
     const img_url = "https://dumabashir.alwaysdata.net/static/images/";
-
-    const fetchProducts = async () => {
-        try {
-            setLoading(true);
-            const response = await axios.get("https://dumabashir.alwaysdata.net/api/get_products_details");
-            setProducts(response.data);
-            setLoading(false);
-        } catch (error) {
-            setLoading(false);
-            setError(error.message);
-        }
-    };
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchProducts();
+        setLoading(true);
+        axios.get("https://dumabashir.alwaysdata.net/api/get_instruments")
+            .then(res => {
+                setItems(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError("Failed to load instruments");
+                setLoading(false);
+            });
     }, []);
 
     return (
         <div className="bg-dark min-vh-100">
+
             <Navbar />
 
             <div className="container-fluid px-4">
-                <h3 className="text-warning text-center py-3">🌟 Find Your Spark</h3>
-                <Mycarousel />
+                <h2 className="text-warning text-center py-3">🎸 Instruments Showcase</h2>
 
                 {loading && <Loader />}
                 {error && <p className="text-danger text-center">{error}</p>}
 
+                {!loading && items.length === 0 && (
+                    <p className="text-center text-light mt-5">No instruments uploaded yet.</p>
+                )}
+
                 <div className="row mt-4 g-4">
-                    {products.map((product) => (
-                        <div className="col-md-3 col-sm-6" key={product.product_id}>
+                    {items.map(item => (
+                        <div key={item.id} className="col-md-3 col-sm-6">
                             <div className="card h-100 shadow bg-secondary border-0 rounded-3">
                                 <img
-                                    src={img_url + product.product_photo}
-                                    alt={product.product_name}
+                                    src={img_url + item.photo}
+                                    alt={item.name}
                                     className="card-img-top rounded-top"
                                     style={{ height: "200px", objectFit: "cover" }}
                                 />
                                 <div className="card-body d-flex flex-column">
-                                    <h5 className="text-warning">{product.product_name}</h5>
+                                    <h5 className="text-warning">{item.name}</h5>
                                     <p className="text-light small flex-grow-1">
-                                        {product.product_description.slice(0, 80)}...
+                                        {item.description.slice(0, 80)}...
                                     </p>
-                                    <h6 className="text-info">KES {product.product_cost}</h6>
+                                    <h6 className="text-info">KES {item.price}</h6>
                                     <button
                                         className="btn btn-outline-warning mt-2 w-100"
-                                        onClick={() => navigate('/makepayment', { state: { product } })}
+                                        onClick={() => navigate('/buy-instrument', { state: { item } })}
                                     >
-                                        Apply Now
+                                        🛒 Buy Now
                                     </button>
                                 </div>
                             </div>
@@ -76,4 +76,4 @@ const Getproduct = () => {
     );
 };
 
-export default Getproduct;
+export default Instruments;
