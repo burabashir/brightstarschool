@@ -20,6 +20,7 @@ import Apply from './components/Apply';
 import Dashboard from './components/Dashboard';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
+import Checkout from './components/Checkout';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -74,6 +75,11 @@ function App() {
           <Route path="/buy-instrument" element={
             <ProtectedRoute>
               <BuyInstrument />
+            </ProtectedRoute>
+          } />
+          <Route path="/checkout" element={
+            <ProtectedRoute>
+              <Checkout />
             </ProtectedRoute>
           } />
 

@@ -40,23 +40,7 @@ const Home = () => {
 
             {/* ── HERO / CAROUSEL ── */}
             <div style={styles.carouselWrapper}>
-                <Mycarousel />
-                <div style={styles.carouselOverlay}>
-                    <h1 style={styles.heroTitle}>
-                        Let Your <span style={styles.heroGradient}>Talent</span> Shine 🌟
-                    </h1>
-                    <p style={styles.heroSub}>
-                        Spotlight connects students with schools, programs, and life-changing opportunities.
-                    </p>
-                    <div style={styles.heroBtnRow}>
-                        <button style={styles.heroBtnPrimary} onClick={() => navigate('/apply')}>
-                            🚀 Get Started
-                        </button>
-                        <button style={styles.heroBtnOutline} onClick={() => navigate('/signup')}>
-                            📝 Join Free
-                        </button>
-                    </div>
-                </div>
+                <Mycarousel onNavigate={navigate} />
             </div>
 
             {/* ── STATS STRIP ── */}

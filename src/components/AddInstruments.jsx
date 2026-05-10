@@ -1,128 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Footer from './Footer';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UploadPage from './UploadPage';
 
 const AddInstruments = () => {
-
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("");
-    const [image, setImage] = useState(null);
-    const [loading, setLoading] = useState("");
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
-
     const navigate = useNavigate();
-
     useEffect(() => {
-        const role = localStorage.getItem("role");
-        if (role !== "school") {
-            navigate("/");
-        }
+        if (localStorage.getItem('role') !== 'school') navigate('/');
     }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading("Uploading instrument...");
-        setError("");
-        setSuccess("");
-
-        try {
-            const role = localStorage.getItem("role");
-
-            const formData = new FormData();
-            formData.append("name", name);
-            formData.append("description", description);
-            formData.append("price", price);
-            formData.append("photo", image);
-            formData.append("role", role);
-
-            const response = await axios.post(
-                "https://dumabashir.alwaysdata.net/api/add_instruments",
-                formData
-            );
-
-            setLoading("");
-            setSuccess("✅ Instrument uploaded successfully!");
-
-            setTimeout(() => {
-                navigate("/instruments");
-            }, 2000);
-
-        } catch (err) {
-            setLoading("");
-            setError("❌ Upload failed. Try again.");
-        }
-    };
-
     return (
-        <div className="container-fluid bg-dark min-vh-100">
-
-            <div className="row justify-content-center mt-5">
-                <div className="col-md-6 bg-secondary p-4 rounded shadow text-light">
-
-                    <h3 className="text-warning mb-4">🎸 Upload Instrument</h3>
-
-                    <form onSubmit={handleSubmit}>
-
-                        <div className="mb-3">
-                            <label className="form-label">Instrument Name</label>
-                            <input
-                                className="form-control bg-dark text-light border-secondary"
-                                placeholder="e.g. Guitar"
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <label className="form-label">Description</label>
-                            <textarea
-                                className="form-control bg-dark text-light border-secondary"
-                                rows="3"
-                                placeholder="Describe the instrument..."
-                                onChange={(e) => setDescription(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <label className="form-label">Price (KES)</label>
-                            <input
-                                type="number"
-                                className="form-control bg-dark text-light border-secondary"
-                                placeholder="e.g. 1500"
-                                onChange={(e) => setPrice(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <label className="form-label">Photo</label>
-                            <input
-                                type="file"
-                                className="form-control bg-dark text-light border-secondary"
-                                onChange={(e) => setImage(e.target.files[0])}
-                                required
-                            />
-                        </div>
-
-                        <button className="btn btn-warning w-100 fw-bold">
-                            Upload Instrument
-                        </button>
-
-                    </form>
-
-                    {loading && <p className="text-warning text-center mt-3">{loading}</p>}
-                    {error && <p className="text-danger text-center mt-3">{error}</p>}
-                    {success && <p className="text-success text-center mt-3">{success}</p>}
-
-                </div>
-            </div>
-
-            <Footer />
-        </div>
+        <UploadPage
+            title="Upload Instrument"
+            badge="Music"
+            icon="🎸"
+            apiUrl="https://dumabashir.alwaysdata.net/api/add_instruments"
+            redirectTo="/instruments"
+            buttonLabel="🚀 Upload Instrument"
+            fields={[
+                { key: 'name', label: 'Instrument Name', placeholder: 'e.g. Guitar' },
+                { key: 'description', label: 'Description', placeholder: 'Describe the instrument...', type: 'textarea' },
+                { key: 'price', label: 'Price (KES)', placeholder: 'e.g. 1500', type: 'number' },
+            ]}
+        />
     );
 };
 
