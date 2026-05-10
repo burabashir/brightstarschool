@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Navbar from './Mynavbar';
 import Footer from './Footer';
 import Loader from './Loader';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +29,6 @@ const Clothes = () => {
     return (
         <div className="bg-dark min-vh-100">
 
-            <Navbar />
 
             <div className="container-fluid px-4">
                 <h2 className="text-warning text-center py-3">👕 Clothes Showcase</h2>
@@ -77,3 +75,4 @@ const Clothes = () => {
 };
 
 export default Clothes;
+// navbar

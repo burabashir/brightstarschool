@@ -3,10 +3,8 @@ import React, { useEffect, useState } from 'react';
 import Loader from './Loader';
 import { useNavigate } from 'react-router-dom';
 import Footer from './Footer';
-import Mycarousel from './Mycarousel';
 
-
-const Getproduct = () => {
+const Apply = () => {
 
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -33,16 +31,18 @@ const Getproduct = () => {
 
     return (
         <div className="bg-dark min-vh-100">
-            
 
             <div className="container-fluid px-4">
-                <h3 className="text-warning text-center py-3">🌟 Find Your Spark</h3>
-                <Mycarousel />
+
+                <div className="text-center py-4">
+                    <h2 className="text-warning fw-bold">🌟 Browse Programs</h2>
+                    <p className="text-light">Choose a program below and make your payment to secure your spot.</p>
+                </div>
 
                 {loading && <Loader />}
                 {error && <p className="text-danger text-center">{error}</p>}
 
-                <div className="row mt-4 g-4">
+                <div className="row mt-2 g-4">
                     {products.map((product) => (
                         <div className="col-md-3 col-sm-6" key={product.product_id}>
                             <div className="card h-100 shadow bg-secondary border-0 rounded-3">
@@ -69,6 +69,7 @@ const Getproduct = () => {
                         </div>
                     ))}
                 </div>
+
             </div>
 
             <Footer />
@@ -76,4 +77,4 @@ const Getproduct = () => {
     );
 };
 
-export default Getproduct;
+export default Apply;

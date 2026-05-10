@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Loader from './Loader';
 import axios from 'axios';
-import Navbar from './Mynavbar';
 import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
 import "../css/signin.css";
@@ -26,14 +25,14 @@ const Addproduct = () => {
         setSuccess("");
 
         try {
-            const role = localStorage.getItem("role"); // ✅ GET ROLE
+            const role = localStorage.getItem("role");
 
             const formData = new FormData();
             formData.append("product_name", product_name);
             formData.append("product_description", product_description);
             formData.append("product_cost", product_cost);
             formData.append("product_photo", product_photo);
-            formData.append("role", role); // ✅ SEND ROLE
+            formData.append("role", role);
 
             const response = await axios.post(
                 "https://dumabashir.alwaysdata.net/api/add_product",
@@ -63,7 +62,6 @@ const Addproduct = () => {
 
     return (
         <div className="container-fluid bg-dark min-vh-100">
-            <Navbar />
 
             <div className="row mt-4 justify-content-center">
                 <div className="col-md-6 custom-card shadow p-4 text-light">

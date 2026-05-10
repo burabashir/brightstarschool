@@ -4,9 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Loader from './Loader';
 import Footer from './Footer';
 
-const Makepayment = () => {
+const MakePaymentInstruments = () => {
 
-    const { product } = useLocation().state || {};
+    const { instrument } = useLocation().state || {};
     const navigate = useNavigate();
     const img_url = "https://dumabashir.alwaysdata.net/static/images/";
 
@@ -24,10 +24,10 @@ const Makepayment = () => {
         try {
             const formData = new FormData();
             formData.append("phone", number);
-            formData.append("amount", product.product_cost);
+            formData.append("amount", instrument.price);
 
             const response = await axios.post(
-                "https://dumabashir.alwaysdata.net/api/mpesa_payment",
+                "https://dumabashir.alwaysdata.net/api/mpesa_payment_instruments",
                 formData
             );
 
@@ -37,21 +37,21 @@ const Makepayment = () => {
                 setSuccess("✅ Payment Successful! Your order is being processed.");
                 setTimeout(() => {
                     window.location.reload();
-                }, 3000); // reload after 3 seconds so user can see the message
+                }, 3000);
             } else {
                 setError(response.data.Error || "Payment failed. Please try again.");
             }
 
-        } catch (error) {
+        } catch (err) {
             setLoading(false);
-            setError(error.message);
+            setError(err.message);
         }
     };
 
-    if (!product) {
+    if (!instrument) {
         return (
             <div className="text-center mt-5">
-                <h3 className="text-danger">No product selected. Please go back and select a product.</h3>
+                <h3 className="text-danger">No instrument selected. Please go back and select an instrument.</h3>
                 <button className="btn btn-primary mt-3" onClick={() => navigate("/")}>Go Home</button>
             </div>
         );
@@ -71,12 +71,12 @@ const Makepayment = () => {
             </div>
 
             <div className="col-md-6 card shadow p-4 bg-dark">
-                <img src={img_url + product.product_photo} alt="Product" className='product_img' />
+                <img src={img_url + instrument.photo} alt={instrument.name} className='product_img' />
 
                 <div className="card-body">
-                    <h2 className="text-info">{product.product_name}</h2>
-                    <p className="text-light">{product.product_description}</p>
-                    <h3 className="text-warning">Kes {product.product_cost}</h3>
+                    <h2 className="text-info">{instrument.name}</h2>
+                    <p className="text-light">{instrument.description}</p>
+                    <h3 className="text-warning">Kes {instrument.price}</h3>
 
                     <form onSubmit={handlesubmit}>
                         {loading && <Loader />}
@@ -104,7 +104,7 @@ const Makepayment = () => {
 
                         <input
                             type="submit"
-                            value="Make Payment"
+                            value="Pay for Instrument"
                             className="btn btn-success w-100"
                         />
                     </form>
@@ -116,4 +116,4 @@ const Makepayment = () => {
     );
 };
 
-export default Makepayment;
+export default MakePaymentInstruments;

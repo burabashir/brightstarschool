@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from './Mynavbar';
 import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,7 +15,6 @@ const AddClothes = () => {
 
     const navigate = useNavigate();
 
-    // ✅ Protect route - school only
     useEffect(() => {
         const role = localStorage.getItem("role");
         if (role !== "school") {
@@ -60,7 +58,6 @@ const AddClothes = () => {
 
     return (
         <div className="container-fluid bg-dark min-vh-100">
-            <Navbar />
 
             <div className="row justify-content-center mt-5">
                 <div className="col-md-6 bg-secondary p-4 rounded shadow text-light">
