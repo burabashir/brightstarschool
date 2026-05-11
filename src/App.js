@@ -21,6 +21,7 @@ import Dashboard from './components/Dashboard';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Checkout from './components/Checkout';
+import PaymentSuccess from './components/PaymentSuccess';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -29,12 +30,6 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-
-        <header className="App-header">
-          <h1 className="text-warning">
-            Brightstar School - Talent Expo
-          </h1>
-        </header>
 
         {/* Navbar visible on all pages */}
         <Navbar />
@@ -50,6 +45,9 @@ function App() {
           <Route path="/instruments" element={<Instruments />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/apply" element={<Apply />} />
+
+          {/* PAYMENT SUCCESS - shown after STK Push is sent */}
+          <Route path="/payment-success" element={<PaymentSuccess />} />
 
           {/* PROTECTED ROUTES - must be signed in */}
           <Route path="/makepayment" element={

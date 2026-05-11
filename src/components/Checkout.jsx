@@ -7,10 +7,11 @@ const Checkout = () => {
     const navigate = useNavigate();
     const cartItems = state?.cartItems || [];
     const total = state?.total || 0;
+    const from = state?.from || '/'; // passed from Clothes/Instruments page
 
     const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState(null); // 'success' | 'error' | null
+    const [status, setStatus] = useState(null); // 'error' | null
     const [message, setMessage] = useState('');
 
     if (cartItems.length === 0) {
@@ -66,8 +67,14 @@ const Checkout = () => {
             const data = await res.json();
 
             if (data.success) {
-                setStatus('success');
-                setMessage(data.message || '✅ STK Push sent! Check your phone.');
+                // ✅ Navigate to the dedicated success / reminder page
+                navigate('/payment-success', {
+                    state: {
+                        total,
+                        phone: phone.trim(),
+                        from, // so "Continue Shopping" goes back to the right shop
+                    },
+                });
             } else {
                 setStatus('error');
                 setMessage(data.Error || 'Payment failed. Please try again.');
@@ -138,23 +145,10 @@ const Checkout = () => {
                     </div>
                     <p style={S.inputHint}>Enter your Safaricom number e.g. 0712345678</p>
 
-                    {/* STATUS MESSAGE */}
-                    {status && (
-                        <div style={{
-                            ...S.statusBox,
-                            background: status === 'success'
-                                ? 'rgba(16,185,129,0.12)'
-                                : 'rgba(239,68,68,0.12)',
-                            border: `1px solid ${status === 'success'
-                                ? 'rgba(52,211,153,0.3)'
-                                : 'rgba(248,113,113,0.3)'}`,
-                        }}>
-                            <span style={{
-                                color: status === 'success' ? '#34d399' : '#f87171',
-                                fontSize: '14px',
-                            }}>
-                                {message}
-                            </span>
+                    {/* ERROR MESSAGE ONLY */}
+                    {status === 'error' && (
+                        <div style={S.errorBox}>
+                            <span style={S.errorText}>{message}</span>
                         </div>
                     )}
 
@@ -172,15 +166,6 @@ const Checkout = () => {
                             `📱 Pay KES ${total.toLocaleString()} via M-Pesa`
                         )}
                     </button>
-
-                    {status === 'success' && (
-                        <div style={S.successSteps}>
-                            <p style={S.stepsTitle}>Next steps:</p>
-                            <div style={S.step}><span style={S.stepNum}>1</span> Check your phone for the M-Pesa prompt</div>
-                            <div style={S.step}><span style={S.stepNum}>2</span> Enter your M-Pesa PIN to confirm</div>
-                            <div style={S.step}><span style={S.stepNum}>3</span> You'll receive an SMS confirmation</div>
-                        </div>
-                    )}
 
                     <p style={S.payNote}>
                         🔒 Payments are processed securely via Safaricom M-Pesa
@@ -321,9 +306,14 @@ const S = {
         color: 'rgba(255,255,255,0.3)',
         fontSize: '12px', margin: '7px 0 0',
     },
-    statusBox: {
+    errorBox: {
+        background: 'rgba(239,68,68,0.12)',
+        border: '1px solid rgba(248,113,113,0.3)',
         borderRadius: '12px', padding: '12px 16px',
         margin: '16px 0',
+    },
+    errorText: {
+        color: '#f87171', fontSize: '14px',
     },
     btnPay: {
         width: '100%', padding: '15px',
@@ -346,30 +336,6 @@ const S = {
         borderTop: '2px solid #fff',
         borderRadius: '50%',
         animation: 'spin 0.8s linear infinite',
-    },
-    successSteps: {
-        background: 'rgba(16,185,129,0.08)',
-        border: '1px solid rgba(52,211,153,0.2)',
-        borderRadius: '12px', padding: '16px',
-        marginBottom: '16px',
-    },
-    stepsTitle: {
-        color: '#34d399', fontSize: '13px',
-        fontWeight: '700', margin: '0 0 12px',
-    },
-    step: {
-        display: 'flex', alignItems: 'center', gap: '10px',
-        color: 'rgba(255,255,255,0.65)',
-        fontSize: '13px', marginBottom: '8px',
-    },
-    stepNum: {
-        width: '22px', height: '22px',
-        background: 'rgba(52,211,153,0.2)',
-        border: '1px solid rgba(52,211,153,0.3)',
-        borderRadius: '50%', display: 'flex',
-        alignItems: 'center', justifyContent: 'center',
-        color: '#34d399', fontSize: '11px',
-        fontWeight: '700', flexShrink: 0,
     },
     payNote: {
         color: 'rgba(255,255,255,0.25)',
